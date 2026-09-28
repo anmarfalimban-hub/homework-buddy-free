@@ -281,7 +281,6 @@ textarea{min-height:96px;resize:vertical;unicode-bidi:plaintext}
     <button class="tab" role="tab" data-v="schedule"><span class="ic">🗓️</span><span class="tx">Schedule</span></button>
     <button class="tab" role="tab" data-v="upcoming"><span class="ic">📚</span><span class="tx">Upcoming</span><span class="badge" id="upBadge" hidden></span></button>
     <button class="tab" role="tab" data-v="done"><span class="ic">⭐</span><span class="tx">Done</span></button>
-    <button class="tab" role="tab" data-v="rewards"><span class="ic">🎁</span><span class="tx">Rewards</span></button>
   </nav>
 
   <main id="view"></main>
@@ -327,7 +326,7 @@ textarea{min-height:96px;resize:vertical;unicode-bidi:plaintext}
   <h1>Homework <span>Buddy</span></h1>
   <div style="position:relative;background:#FFD43B;color:#22304F;border-radius:99px;padding:2px 18px;font-weight:800;font-size:18px;margin-top:-4px">FREE</div>
   <p>Your friendly homework reminder</p>
-  <div class="schips"><span>📅 Schedule</span><span>🔔 Reminders</span><span>🎁 Rewards</span></div>
+  <div class="schips"><span>📅 Schedule</span><span>🔔 Reminders</span><span>⭐ Stars</span></div>
   <button id="startBtn"><span class="pl">▶</span>Tap to start</button>
 </div>
 <canvas id="confetti"></canvas>
@@ -632,6 +631,7 @@ function upgradeSheet(){
       🦄 4 buddies to choose from, each with its own colors<br>
       🎵 Choose your reminder sound<br>
       ☁️ Family sync: the same homework on the iPad and your parents’ phones<br>
+      🎁 Parent rewards: set a prize your child earns with stars<br>
       👧👦 Use it for more than one child</div>
     ${contactHtml()}
     <a class="btn main" style="display:block;text-align:center;text-decoration:none;margin-top:10px" target="_blank" rel="noopener" href="${FULL_URL}">Open the full version</a>
@@ -895,6 +895,7 @@ const RW_EMOJI=['🍦','🎁','🧸','🎨','🍕','🎬','🛍️','🎡','🏖
 const rwProg=r=>Math.max(0,Math.min(r.stars,state.stars-r.start));
 const rwReady=r=>!r.given&&rwProg(r)>=r.stars;
 function nextRewardCard(){
+  if(FREE)return '';
   const open=(state.rewards||[]).filter(r=>!r.given);
   if(!open.length)return '';
   const r=open.slice().sort((a,b)=>(a.stars-rwProg(a))-(b.stars-rwProg(b)))[0];
@@ -965,6 +966,7 @@ function parentPanel(){
   });
 }
 function checkRewards(){
+  if(FREE)return;
   const r=(state.rewards||[]).find(x=>rwReady(x)&&!x.announced);
   if(!r)return;
   r.announced=true;save();
